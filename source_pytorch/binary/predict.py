@@ -2,11 +2,10 @@
 import os
 import numpy as np
 import torch
-import torch.nn.functional as F
 from six import BytesIO
 
 # import model from model.py, by name
-from model import MultiClassClassifier
+from model import BinaryClassifier
 
 # default content type is numpy array
 NP_CONTENT_TYPE = 'application/x-npy'
@@ -27,7 +26,7 @@ def model_fn(model_dir):
 
     # Determine the device and construct the model.
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = MultiClassClassifier(model_info['input_features'], model_info['hidden_dim'], model_info['output_dim'])
+    model = BinaryClassifier(model_info['input_features'], model_info['hidden_dim'], model_info['output_dim'])
 
     # Load the store model parameters.
     model_path = os.path.join(model_dir, 'model.pth')
@@ -74,11 +73,8 @@ def predict_fn(input_data, model):
 
     # Compute the result of applying the model to the input data
     # The variable `out_label` should be a rounded value, either 1 or 0
-    with torch.no_grad():
-        out = model(data)
-        out_label = F.softmax(out, dim=1)
-        out_np = out_label.cpu().detach().numpy()
-        #out_label = out_np.round()
-        #out_label = torch.nn.Softmax(out_np)
+    out = model(data)
+    out_np = out.cpu().detach().numpy()
+    out_label = out_np.round()
 
-    return out_np
+    return out_label

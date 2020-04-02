@@ -4,7 +4,7 @@ import torch.nn as nn
 
 
 ## TODO: Complete this classifier
-class MultiClassClassifier(nn.Module):
+class BinaryClassifier(nn.Module):
     """
     Define a neural network that performs binary classification.
     The network should accept your number of features as input, and produce 
@@ -24,16 +24,16 @@ class MultiClassClassifier(nn.Module):
         :param hidden_dim: helps define the number of nodes in the hidden layer(s)
         :param output_dim: the number of outputs you want to produce
         """
-        super(MultiClassClassifier, self).__init__()
+        super(BinaryClassifier, self).__init__()
 
         # define any initial layers, here
         # 2 layers Fully connected Neural Network
         self.fc1 = nn.Linear(input_features, hidden_dim)
         self.fc2 = nn.Linear(hidden_dim, output_dim)
         # Dropout layer:
-        self.drop = nn.Dropout(0.5)
-        # Fostmax layer??
-        #self.sig = nn.Sigmoid()
+        self.drop = nn.Dropout(0.4)
+        # Sigmoid layer:
+        self.sig = nn.Sigmoid()
         
 
     
@@ -52,5 +52,5 @@ class MultiClassClassifier(nn.Module):
         out = self.drop(out)
         out = self.fc2(out)
         # Apply a Sigmoid activation on layer 2
-        return out
+        return self.sig(out)
     

@@ -8,7 +8,7 @@ import torch.utils.data
 import torch.nn as nn
 
 # imports the model in model.py by name
-from model import MultiClassClassifier
+from model import BinaryClassifier
 
 def model_fn(model_dir):
     """Load the PyTorch model from the `model_dir` directory."""
@@ -24,7 +24,7 @@ def model_fn(model_dir):
 
     # Determine the device and construct the model.
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = MultiClassClassifier(model_info['input_features'], model_info['hidden_dim'], model_info['output_dim'])
+    model = BinaryClassifier(model_info['input_features'], model_info['hidden_dim'], model_info['output_dim'])
 
     # Load the stored model parameters.
     model_path = os.path.join(model_dir, 'model.pth')
@@ -43,8 +43,7 @@ def _get_train_data_loader(batch_size, training_dir):
 
     train_data = pd.read_csv(os.path.join(training_dir, "train.csv"), header=None, names=None)
 
-    #train_y = torch.from_numpy(train_data[[0]].values).float().squeeze()
-    train_y = torch.LongTensor(train_data[[0]].values).long().squeeze()
+    train_y = torch.from_numpy(train_data[[0]].values).float().squeeze()
     train_x = torch.from_numpy(train_data.drop([0], axis=1).values).float()
 
     train_ds = torch.utils.data.TensorDataset(train_x, train_y)
@@ -141,11 +140,11 @@ if __name__ == '__main__':
     ## TODO:  Build the model by passing in the input params
     # To get params from the parser, call args.argument_name, ex. args.epochs or ards.hidden_dim
     # Don't forget to move your model .to(device) to move to GPU , if appropriate
-    model = MultiClassClassifier(args.input_features, args.hidden_dim, args.output_dim).to(device)
+    model = BinaryClassifier(args.input_features, args.hidden_dim, args.output_dim).to(device)
 
     ## TODO: Define an optimizer and loss function for training
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.BCELoss()
 
     # Trains the model (given line of code, which calls the above training function)
     train(model, train_loader, args.epochs, criterion, optimizer, device)
