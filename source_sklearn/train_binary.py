@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     ## TODO: Define a model
     #param_C=args.C
-    model = SVC(C=args.C, kernel='rbf', class_weight='balanced', tol=args.tol, random_state=0)
+    model = SVC(C=args.C, kernel='linear', class_weight='balanced', tol=args.tol, random_state=0)
     
     
     ## TODO: Train the model

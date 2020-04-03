@@ -118,7 +118,7 @@ if __name__ == '__main__':
     
     ## TODO: Add args for the three model parameters: input_features, hidden_dim, output_dim
     # Model Parameters
-    parser.add_argument('--lr', type=float, default=0.001, metavar='LR', help='learning rate (default: 0.001)')
+    parser.add_argument('--lr', type=float, default=0.01, metavar='LR', help='learning rate (default: 0.001)')
     parser.add_argument('--input_features', type=int, default=3, metavar='IN', help='Input layer dim (default: 3)')
     parser.add_argument('--hidden_dim', type=int, default=32, metavar='H', help='Hidden layer dimension(default: 20)')
     parser.add_argument('--output_dim', type=int, default=1, metavar='OUT', help='output layer dimension(default: 1)')

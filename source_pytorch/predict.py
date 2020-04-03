@@ -76,9 +76,8 @@ def predict_fn(input_data, model):
     # The variable `out_label` should be a rounded value, either 1 or 0
     with torch.no_grad():
         out = model(data)
-        out_label = F.softmax(out, dim=1)
+        out_label = F.log_softmax(out, dim=1)
         out_np = out_label.cpu().detach().numpy()
         #out_label = out_np.round()
-        #out_label = torch.nn.Softmax(out_np)
-
+ 
     return out_np
