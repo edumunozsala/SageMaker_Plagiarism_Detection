@@ -29,10 +29,16 @@ class MultiClassClassifier(nn.Module):
         # define any initial layers, here
         # 2 layers Fully connected Neural Network
         self.fc1 = nn.Linear(input_features, hidden_dim)
-        self.fc2 = nn.Linear(hidden_dim, output_dim)
+        #self.fc2 = nn.Linear(hidden_dim, hidden_dim//2)
+        self.fc3 = nn.Linear(hidden_dim, output_dim)
+        # ReLu layer for non linear activation
+        self.relu = nn.ReLU()
         # Dropout layer:
-        self.drop = nn.Dropout(0.5)
-        # Fostmax layer??
+        self.drop = nn.Dropout(0.3)
+        # Batchnormalization layers
+        self.bn1 = nn.BatchNorm1d(hidden_dim)
+        #self.bn2 = nn.BatchNorm1d(hidden_dim//2)
+
         #self.sig = nn.Sigmoid()
         
 
@@ -46,11 +52,20 @@ class MultiClassClassifier(nn.Module):
         """
         
         # define the feedforward behavior
-        # Apply a RELU activation on layer 1
-        out = F.relu(self.fc1(x))
-        # Dropout input to layer 2
+        # Apply a FC layer, BatchNorm and RELU activation on layer 1
+        out = self.fc1(x)
+        out = self.bn1(out)
+        out= self.relu(out)
+        # Dropout inputs to layer 2
         out = self.drop(out)
-        out = self.fc2(out)
+        # Apply a FC layer, BatchNorm and RELU activation on layer 2
+        #out = self.fc2(out)
+        #out = self.bn2(out)
+        #out= self.relu(out)
+        # Dropout inputs to layer 3
+        #out = self.drop(out)
+        # Apply a FC layer on layer 2 (Softmax applied in loss calculation)
+        out = self.fc3(out)
 
         return out
     
